@@ -13,19 +13,29 @@ export const EditPostForm = ({ match }) => {
 
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
-
-    const dispatch = useDispatch();
-    const history = useHistory();
+    const [userId, setUserId] = useState(post.user);
 
     const onTitleChanged = (e) => setTitle(e.target.value);
     const onContentChanged = (e) => setContent(e.target.value);
+    const onAuthorChanged = (e) => setUserId(e.target.value);
 
+    const dispatch = useDispatch();
+    const history = useHistory();
     const onSavePostClicked = () => {
         if (title && content) {
-            dispatch(postUpdated({ id: postId, title, content }));
+            dispatch(postUpdated({ id: postId, title, content, user: userId }));
             history.push(`/posts/${postId}`);
         }
     };
+
+    const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
+
+    const users = useSelector((state) => state.users);
+    const usersOptions = users.map((user) => (
+        <option key={user.id} value={user.id}>
+            {user.name}
+        </option>
+    ));
 
     return (
         <section>
@@ -40,7 +50,15 @@ export const EditPostForm = ({ match }) => {
                     value={title}
                     onChange={onTitleChanged}
                 />
-
+                <label htmlFor="postAuthor">Author:</label>
+                <select
+                    id="postAuthor"
+                    value={userId}
+                    onChange={onAuthorChanged}
+                >
+                    <option value=""></option>
+                    {usersOptions}
+                </select>
                 <label htmlFor="postContent">Content:</label>
                 <textarea
                     id="postContent"
@@ -48,7 +66,11 @@ export const EditPostForm = ({ match }) => {
                     value={content}
                     onChange={onContentChanged}
                 />
-                <button type="button" onClick={onSavePostClicked}>
+                <button
+                    type="button"
+                    onClick={onSavePostClicked}
+                    disabled={!canSave}
+                >
                     Save Post
                 </button>
             </form>
