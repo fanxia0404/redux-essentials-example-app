@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { postUpdated, selectPostById } from './postsSlice';
+import { selectAllUsers } from '../users/usersSlice';
 
 export const EditPostForm = ({ match }) => {
     const { postId } = match.params;
@@ -28,7 +29,7 @@ export const EditPostForm = ({ match }) => {
 
     const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
 
-    const users = useSelector((state) => state.users);
+    const users = useSelector(selectAllUsers);
     const usersOptions = users.map((user) => (
         <option key={user.id} value={user.id}>
             {user.name}

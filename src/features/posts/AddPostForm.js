@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { addNewPost } from './postsSlice';
+import { selectAllUsers } from '../users/usersSlice';
 
 export const AddPostForm = () => {
     const [title, setTitle] = useState('');
@@ -37,7 +38,7 @@ export const AddPostForm = () => {
         }
     };
 
-    const users = useSelector((state) => state.users);
+    const users = useSelector(selectAllUsers);
     const usersOptions = users.map((user) => (
         <option key={user.id} value={user.id}>
             {user.name}
